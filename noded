@@ -23,6 +23,8 @@ var gitStatus;
 git.stdout.once('data', function(data) {
   if (!(data + '').match('nothing to commit'))
     console.log('Warning - Git repository support not in action due to non-clean working directory!');
+  else
+    console.log('Noded Git support enabled');
 });
 
 noded.createEditServer(9876);
