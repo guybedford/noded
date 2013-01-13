@@ -18,14 +18,15 @@ var windows = process.platform == 'win32';
 var args = process.argv.splice(2);
 
 // first check that git is up to date
+/*
 var git = spawn('git', ['status'], { cwd: process.cwd() });
 git.stdout.once('data', function(data) {
-  console.log(data + '');
-  if (!(data + '').indexOf('nothing to commit (working directory clean)') == -1)
-    console.log('Warning - Git repository support not in action due to non-clean working directory!');
+  if ((data + '').indexOf('nothing to commit (working directory clean)') == -1)
+    console.log('Git support not enabled due to non-clean working directory!');
   else
-    console.log('Noded Git support enabled');
+    console.log('Noded Git support enabled.');
 });
+*/
 
 noded.createEditServer(9876);
 
