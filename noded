@@ -19,9 +19,8 @@ var args = process.argv.splice(2);
 
 // first check that git is up to date
 var git = spawn('git', ['status'], { cwd: process.cwd() });
-var gitStatus;
 git.stdout.once('data', function(data) {
-  if (!(data + '').match('nothing to commit'))
+  if (!(data + '').match('nothing to commit (working directory clean)'))
     console.log('Warning - Git repository support not in action due to non-clean working directory!');
   else
     console.log('Noded Git support enabled');
