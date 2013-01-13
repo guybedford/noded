@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+/*
+ * Noded command line utility
+ * 
+ * noded [args]
+ *
+ * args piped directly to nodemon
+ * Server created on port 9876 for noded file editing
+ *
+ */
+var noded = require('noded'),
+  spawn = require('child_process').spawn,
+  path = require('path'),
+  fs = require('fs');
+
+var windows = process.platform == 'win32';
+var args = process.argv.splice(2);
+
+// first check that git is up to date
+var git = spawn('git', ['status'], { cwd: process.cwd() });
+var gitStatus;
+git.stdout.once('data', function(data) {
+  if (!(data + '').match('nothing to commit'))
+    console.log('Warning - Git repository support not in action due to non-clean working directory!');
+});
+
+noded.createEditServer(9876);
+
+pipeStd(spawn(getBinPath('nodemon'), args, { cwd: process.cwd() }));
+
+/* helper functions */
+function pipeStd(p) {
+  p.stdout.on('data', function(data) {
+    process.stdout.write(data);
+  });
+  p.stderr.on('data', function(data) {
+    process.stderr.write(data);
+  });
+}
+
+function getBinPath(binName) {
+  var localBinPath = path.resolve(path.dirname(module.filename), 'node_modules/.bin/' + binName + (windows ? '.cmd' : ''));
+  if (fs.existsSync(localBinPath))
+    return localBinPath;
+  else
+    return binName;
+}
